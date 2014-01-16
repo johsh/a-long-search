@@ -1,0 +1,113 @@
+ID,tag,datum,rueckmeld,besichtigt,zeit,adresse,qm,miete,miete_raw,warm,moebel,area,fake,lat,lon
+1,,,,,,Olbersstr. 2B,18,320,320,,,Charlottenburg,,52.529267,13.297121
+2,,,,,,Osnabrueckerstr. 30B,33,400,400,,,Charlottenburg,,52.52553,13.302868
+3,,,,,,OrdensmeisterstrB,20,290,290,,,Tempelhof,,52.458888,13.397877
+4,,,1,0,,ObentrautstrB,25,367,367,,,Kreuzberg,,52.496161,13.38893
+5,,,,,,Frankfurter Allee 266B,25,350,350,,,Lichtenberg,,52.510731,13.501734
+6,1,07/09/13,1,1,10,Fasanenstr. 64B,21,306,306,,400,Wilmersdorf,,52.499595,13.327325
+7,,,,,,Rathausstr. B,30,350,350,,,Mitte,,52.519538,13.40955
+8,4,10/09/13,1,1,8,Elbfelderstr.B,44,340,340,,,Moabit,,52.52,13.34
+9,,,,,,TheklastrB,38,390,390,,,Lichterfelde,,52.430148,13.303008
+10,,,,,,UpstalwegB,39,382,382,,,Mariendorf,,52.440362,13.384927
+11,,,,,,Durlachstr 23B,37,315,315,,300,Wilmersdorf,,52.48952,13.31543
+12,,,1,,,Zwillingstr. 10B,35,380,380,,,Neukoelln,,52.46764,13.4633884
+13,,,,,,Frankfurter Allee 216B,35,394,394,,365,Lichtenberg,,52.511009,13.494137
+14,,,,,,Brigittenstr. 1B,41,380,380,,,Lankwitz,,52.434143,13.337403
+15,,,,,,Warschauerstr. 83B,18,340,340,,,Friedrichshain,,52.514454,13.453979
+16,,,,,,Gervinusstr. B,16,315,315,,,Charlottenburg,,52.502316,13.296721
+17,,,,,,Suarezstr. 7B,16,390,390,,,Charlottenburg,,52.509529,13.296305
+18,,,,,,Schlesischer Str. 20B,18,280,280,,,Kreuzberg,,52.498491,13.446396
+19,,,,,,Fidicinstrasse 29B,23,370,370,,,Kreuzberg,,52.486784,13.392767
+20,2,08/09/13,1,1,17,Pradelstr. 4B,23,330,330,,,Pankow,,52.564976,13.395194
+21,5,11/09/13,1,1,11,Winfriedstr. 39B,25,250,250,,,Zehlendorf,,52.438488,13.264062
+22,,,,,,Heinrich-Heine-StrB,33,385,385,,,Mitte,,52.510134,13.414992
+23,,,,,,Wickertstr. 51B,22,300,300,,,Prenzlauer Berg,,52.547233,13.424646
+24,,,1,0,,Manteufelstr. 81B,33,390,390,,,Tempelhof,,52.464434,13.377514
+25,,,,,,Bleichstr.B,35,380,380,,,Kreuzberg,,,
+26,,,,,,Stuelpnagelstr. 7B,31,365,365,,,Charlottenburg,,52.511511,13.283072
+27,,,,,,Muelhauser Str 2B,36,330,330,,,Prenzlauer Berg,,52.532973,13.418973
+28,,,,,,Heidelaeuferweg 56/58B,43,324,324,,,Buckow,,52.418883,13.439974
+29,,,,,,Lynarstr. 9B,37,315,315,,,Spandau,,52.548939,13.207461
+30,,,,,,Eulerstr. 14B,22,360,360,,,Gesundbrunnen,,52.553755,13.391069
+31,5,11/09/13,1,1,18,Jonasstr. B,35,362,362,,,Neukoelln,,52.472202,13.439732
+32,,,,,,Frankfurter Allee 216B,25,337,337,,,Friedrichshain,,52.514916,13.458255
+33,,,,,,Fichtestr. 33B,53,410,410,,,Kreuzberg,,52.491132,13.41332
+34,2,08/09/13,1,1,12,Schierker Platz 5B,40,380,380,,,Neukoelln,,52.470294,13.437824
+35,,,,,,Knoeckstr. 1B,56,250,250,,,Prenzlauer Berg,1,52.528493,13.422526
+36,,,,,,Strassmannstr. 29B,38,389,389,,,Friedrichshain,,52.522803,13.451695
+37,,,,,,Pistoriusstr. 26B,44,389,389,,,Weissensee,,52.552542,13.450618
+38,,,,,,Koenigin-Elisabeth-Str. 27B,38,397,397,,,Charlottenburg,,52.51248,13.280986
+39,,,,,,Ruedigerstr. 81B,42,379,379,,,Lichterfelde,,54.035923,10.444801
+40,,,,,,Cotheniusstr. 1B,15,299,299,,,Friedrichshain,,52.527878,13.447099
+41,,,,,,Beusselstr. 62B,38,370,370,,,Moabit,,52.528792,13.328377
+42,,,,,,Paulsbornestr. 88aB,23,340,340,,,Wilmersdorf,,52.49673,13.304687
+43,,,,,,Bornholmerstr. 73B,42,320,320,,,Prenzlauer Berg,,52.554021,13.403737
+44,5,11/09/13,1,1,12,Huttenstr. 38B,36,336,336,,,Charlottenburg,,52.528826,13.316287
+45,,,,,,Anzengruberstr. 11B,33,375,375,,,Neukoelln,,52.480561,13.440675
+46,6,12/09/13,1,1,17,Bornholmerstr. 73B,42,328,328,,,Prenzlauer Berg,,52.554021,13.403737
+47,,,,,,Kaiserin-Augusta-Allee 6B,35,385,285,0,,Moabit,,52.525176,13.325441
+48,,,,,,Conrad-Blenkle-Strasse 67B,45,381,381,1,,Friedrichshain,,52.527742,13.450081
+49,7,13/09/13,1,1,11,Siemensstr. 11B,38,333,333,1,,Oberschoeneweide,,52.464109,13.50994
+50,,,,,,Apartment Brelin SchoenebergB,33,373,373,,,Schoeneberg,,,
+51,,,,,,Britzer Damm 87B,35,314,314,1,,Britz,,52.454932,13.437936
+52,,,,,,Rollbergstr. 39B,30,283,283,1,,Neukoelln,,52.478765,13.431488
+53,9,15/09/13,1,1,14,Beusselstr. 6B,31,333,333,1,,Moabit,,52.528792,13.328377
+54,,,,,,Dahlemer Weg 73B,28,310,310,,,Zehlendorf,,52.431434,13.280101
+55,9,15/09/13,1,1,12,Sennockstr. 22B,31,358,358,1,,Tempelhof,,52.467981,13.382033
+56,,,,,,Rechsdorfer Str. 6B,30,304,304,,,Kreuzberg,,52.49,13.38
+57,,,1,0,,Gerichtstr. 31B,32,375,375,1,,Wedding,,52.544979,13.368468
+58,,,,,,Koloniestr. 38B,38,375,375,1,,Gesundbrunnen,,52.561029,13.381209
+59,9,15/09/13,1,1,17,Langhansstr. 151B,28,347,347,,,Weissensee,,52.548688,13.449878
+60,10,16/09/13,1,1,17,Ruhlsdorferstr. 6B,30,304,304,,,Kreuzberg,,52.49682,13.387112
+61,10,16/09/13,1,1,15,Weigandufer 6B,34,380,380,1,,Neukoelln,,52.486118,13.441278
+62,11,17/09/13,1,1,10,Wulfila Ufer 30B,38,335,335,1,,Tempelhof,,52.452489,13.376943
+63,,,,,,Schlesischer Str. 37B,30,329,329,1,,Kreuzberg,,52.499767,13.444809
+64,,,,,,Luetzowufer 24B,25,320,320,,,Tiergarten,,52.505728,13.350526
+65,,,,,,Loewestr. 7B,28,322,322,,,Friedrichshain,,52.519898,13.446269
+66,,,,,,Coppisstr. 10B,30,333,333,1,,Lichtenberg,,52.509195,13.483042
+67,12,18/09/13,1,1,11,Schnellerstr. 65B,30,375,375,1,,Oberschoeneweide,,52.45,13.53
+68,,,,,,Seestr. 117,39,295,295,1,,Wedding,,52.547625,13.34453
+69,,,,,,Bouchestr. 79,27,355,355,,,Kreuzberg,,52.4904216,13.448873
+70,,,,,,Grammestr. 3,42,290,290,,,Siemensstadt,,52.53591,13.266973
+71,,,,,,Schillerstr.,28,330,330,,,Charlottenburg,,52.511261,13.322682
+72,,,,,,Wickertstr. 67,32,370,370,,,Prenzlauer Berg,,52.550237,13.416676
+73,,,,,,Huttenstr. 25,30,320,320,,,Schoeneberg,,52.50,13.34
+74,,,,1,0,Gruenbergstr. 84,37,318,318,,,Friedrichshain,,52.51402,13.45403
+75,,,,,,Kiantschoustr. 16,32,258,258,,,Wedding,,52.540635,13.356369
+76,5,11/10/13,1,1,8,Tempelhofer Damm 127,32,341,341,,,Tempelhof,,52.468183,13.385986
+77,9,15/10/13,1,1,17,Osloerstr. 116,35,310,310,,,Wedding,,52.557148,13.366174
+78,,,,,,Gledischstr. 68,29,350,350,,,Schoeneberg,,52.490586,13.35472
+79,,,,,,,40,317,317,,,Charlottenburg,,52.5186806,13.3064299
+80,,,,,,Reichstr.,32,332,332,,,Mitte,,52.5185356,13.378355
+81,,,,,,Groningerstr. 4,43,379,379,,,Wedding,,52.551054,13.36247
+82,,,,,,Kamerunerstr. 11,40,328,328,1,,Wedding,,52.550377,13.346363
+83,,,,,,Wilhelmshavenerstr. 58,35,335,335,,,Moabit,,52.529631,13.341132
+84,,,,,,Moeckernstr. 122,38,360,360,,,Kreuzberg,,52.498291,13.380413
+85,,,,,,Bundesplatz,36,378,378,,,Wilmersdorf,,52.4775009,13.3286114
+86,,,,,,Siemensstr. 11B,34,360,360,1,,Moabit,,52.532668,13.332703
+87,,,,,,Motzstr.,34,397,397,,,Schoeneberg,,52.494956,13.339474
+88,,,,,,Alexanderplatz,44,368,368,,,Mitte,,52.52,13.41
+89,21,27/10/13,1,1,15,Boxhagenerstr. 66,27,437,337,0,,Friedrichshain,,52.506018,13.470755
+90,13,19/10/13,1,1,14,Dudenstr. 66,35,391,391,1,,Kreuzberg,,52.485177,13.37617
+91,,,,,,Sonnenallee 102,23,330,330,1,,Neukoelln,,52.4761124,13.4525003
+92,,,,,,Friedrichshain 34,34,414,314,0,,Friedrichshain,,52.514019,13.45403
+93,16,22/10/13,1,1,16,Luebeckerstr. 27,33,328,328,1,,Tiergarten,,52.50984,13.36345
+94,,,,,,Osloerstr. 116,25,200,200,,,Wedding,,52.557148,13.366174
+95,,,,,,Weisestr. 54,38,350,350,1,,Neukoelln,,52.477883,13.423952
+96,14,20/10/13,1,1,13,Rodenbergstr. 3,32,355,255,0,,Prenzlauer Berg,,52.55141,13.414768
+97,,,,,,Friedrichsbrunnerstr. 16,34,267,267,,,Neukoelln,,52.460617,13.429313
+98,,,,,,Glasgowerstr. 27,35,385,285,0,,Wedding,,52.555974,13.3438
+99,,,,,,Lübeckerstr. 66,33,328,328,1,,Tiergarten,,52.50984,13.36345
+100,,,,,,Prinzenallee 47,35,360,360,,,Gesundbrunnen,,52.559853,13.386023
+101,17,23/10/13,1,1,18,Greifswalderstr. 164,35,349,349,,,Prenzlauer Berg,,52.542276,13.439655
+102,,,,,,Rollbergstr. 39B,28,377,277,,,Neukoelln,,,
+103,17,23/10/13,1,1,17,Bachstr. 54,27,347,347,1,,Wedding,,52.546576,13.370171
+104,,,,,,Malmoeerstr. 7,38,385,385,1,,Prenzlauer Berg,,52.551703,13.403781
+105,19,25/10/13,1,1,15,Bruesselstr. 42,34,389,389,1,,Wedding,,,
+106,,,,,,Liezensee,30,430,330,0,,Charlottenburg,,52.5066833,13.2890816
+107,17,23/10/13,1,1,11,Manteufelstr.,31,303,303,1,,Kreuzberg,,52.500951,13.427598
+108,,,,,,Antwerpener Str. 4,31,319,319,1,,Wedding,,52.547794,13.34952
+109,,,,,,Matternstr. 6,32,382,382,,,Friedrichshain,,52.521725,13.452979
+110,,,,,,Weidenweg 53,30,366,366,,,Friedrichshain,,52.519073,13.454113
+111,,,,,,Schoenhauser Allee,27,332,332,1,,Prenzlauer Berg, ,52.5489082,13.4164305
+112,,,,,,Putbusserstr. 8,37,324,324,1,,Gesundbrunnen,,52.543745,13.394634

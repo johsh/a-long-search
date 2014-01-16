@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>A Long Search - Looking for a flat in Berlin</title>
+
+		<script type="text/javascript" src="lib/d3.v3.js"></script>	
+		<script type="text/javascript" src="lib/d3.geo.projection.v0.min.js" charset="utf-8"></script>		
+		
+		<script type="text/javascript" src="lib/d3.slider.js"></script>
+			
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+		<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+		<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Source+Sans+Pro">
+		<link rel="stylesheet" href="lib/style.css" />  
+		<link rel="stylesheet" href="lib/d3.slider.css" />  
+	</head>
+	<body>		
+		<div id="left">			
+			<div>
+			<p id="top">Looking for a flat in Berlin</p>
+			<h1>A Long Search</h1></div>
+			<p>Finding a place to live is always a hot issue in Berlin. 
+			Only a fraction of the contacted landlords answer your request. 
+			And even if you are lucky to get a viewing, you will have to squeeze 
+			into the appartment with about 30-40 applicants.</p>
+			
+			<h2>Get a viewing</h2>
+			<div id="rueckmeldung" class="figure"></div>		
+
+			<p>These facts and figures tell the story of a young student looking 
+			for an affordable flat in Berlin during September and October 2013. 
+			Use your mouse to select areas of interest and exlore the data.</p>
+
+			<h2>Flats visited per day</h2>
+			<div class="figure">				
+				<div id="perDay"></div>
+				<div id="daySlider"></div>
+			</div>
+		</div>
+
+		<div id="middle">
+			<h2>Rent per Flatsize</h2>
+			<p>Use the <strong>silders</strong> to select ranges for rent and space:</p>
+			<span>
+			<div id="rentSlider"></div>
+				<div id="pricing"></div>			
+				
+				<div id="qmSlider"></div>
+			</span>
+			
+			<br>
+			<br>
+			
+			<h2>Flats per area</h2>
+			<p>Number of flats per area, due to the current selection. <strong>De-/select</strong> an area by clicking on it.</p>
+			<div id="perArea" class="figure"></div>
+		</div>
+		
+		<div id="right">
+			<div float="left"><h2>Berlin</h2><div id="areaTxt"></div></div>
+			<p>Just <strong>hover over</strong> areas and flats, indicated by black dots. 
+			You can select quarters you are interested in by <strong>clicking</strong> on the area.</p>
+			<div id="areaFilter"></div>
+			<div id="map"></div>
+			<p id="credits">(c) <a href="http://joh.schokokeks.org">Joh Schleith</a>, 2013<br>
+			Data was collected from an actual search<br>
+			in September and October 2013</p>
+		</div>
+		
+		<script type="text/javascript">
+		//MAP
+		//Width and height
+		var wMap = 500;
+		var hMap = 400;
+		
+		var wRueck = 250;
+		var hRueck = 70;
+		
+		var wPerDay = 300;
+		var hPerDay = 80;
+		var padPerDay = 20;
+		
+		var wPricing = 280;
+		var hPricing = 220;
+		var padPricing = 40;
+		
+		var wPerArea = wPricing;
+		var hPerArea = 180;
+		var padPerArea = padPricing;
+		
+		var areaFilter = [];
+		var timeFilter = [];
+		var rentFilter = [];
+		var qmFilter = [];
+				
+		// standard radius
+		var rStd = 3;
+
+		//colors
+		var c1 = "#FAFAD2";
+		var c2 = "gold";
+		var c3 = "#CD853F";
+		
+		var unselectedBar = c1;//"#FAFAD2";//"gold";
+		var selectedBar = c3;//"#CDAD00";
+		
+		var unselectedCircle = "black";
+		var selectedCircle = c2;
+		var selectedSingleCircle = "grey";
+
+		var unselectedMap = c1;//"gold";
+		var selectedMap = c3;//#CDAD00";
+	
+		
+		//projections
+		var proj = d3.geo.mercator()
+			   .center([13.088346, 52.34])
+			   .scale(42000)
+			   .translate([0,hMap]);
+		
+		var path = d3.geo.path()
+				.projection(proj);
+
+		//Create SVG element		
+		var svgMap = d3.select("#map")
+				.append("svg")
+				.attr("width", wMap)
+				.attr("height", hMap);
+
+		var svgPricing = d3.select("#pricing")
+				.append("svg")
+				.attr("width", wPricing)
+				.attr("height", hPricing);
+				
+		var svgRueck = d3.select("#rueckmeldung")
+				.append("svg")
+				.attr("width", wRueck)
+				.attr("height", hRueck);	
+
+		var svgPerArea = d3.select("#perArea")
+				.append("svg")
+				.attr("width", wPerArea)
+				.attr("height", hPerArea);
+				
+		var svgPerDay = d3.select("#perDay")
+				.append("svg")
+				.attr("width", wPerDay)
+				.attr("height", hPerDay);
+						
+		//LOAD DATA and BUILD VIS
+		console.log("load data...");
+	 	d3.csv("data/wgsuche.csv", function(data) {
+		
+			console.log("got the data");
+			
+			var minMiete = d3.min(data, function(d){return d.miete;});
+			var maxMiete = d3.max(data, function(d){return d.miete;});
+			
+			//rentFilter = [minMiete, maxMiete];
+
+			var minQm = d3.min(data, function(d){return d.qm;});
+			var maxQm = d3.max(data, function(d){return d.qm;});
+			
+			//qmFilter = [minQm, maxQm];
+
+			var rScale = d3.scale.linear()
+				.domain([minMiete, maxMiete])
+				.range([2,10]);
+		
+			///////////////////////
+			// FUNCTIONS
+			// select n highlight
+			///////////////////////
+			var valid = function(area, d){
+				if (area == "" && areaFilter.length == 0 && 
+					(rentFilter.length == 0 ||
+					(rentFilter[0] == minMiete &&
+					rentFilter[1] == maxMiete)) &&
+					(qmFilter.length == 0 ||
+					(qmFilter[0] == minQm &&
+					qmFilter[1] == maxQm)))
+					return false;
+				else
+					return ((area == "" && areaFilter.length == 0) || 
+								d.area == area || 
+								areaFilter.indexOf(d.area) != -1) &&
+								(d.miete >= rentFilter[0] && d.miete <= rentFilter[1] && 
+								 d.qm >= qmFilter[0] && d.qm <= qmFilter[1])
+			}
+		
+			function markArea(area, clicked){	
+				if (area != "") document.getElementById("areaTxt").innerHTML="Quarter: " + area;			
+				else document.getElementById("areaTxt").innerHTML="";
+				if (rentFilter.length == 0)
+					rentFilter = [minMiete, maxMiete];
+				if (qmFilter.length == 0)
+					qmFilter = [minQm, maxQm];
+								
+				d3.selectAll("circle")
+					.transition()
+					.attr("r", function(e){
+						if (valid(area, e))
+							return Math.sqrt(rScale(e.miete)*10);
+						else 
+							return rStd;//Math.sqrt(rScale(e.miete)*5);	
+					})
+					.style("fill", function(e){
+						if (valid(area, e)) {
+							return selectedCircle;								
+						} else {
+							return unselectedCircle;
+						}
+					});
+
+				var p = d3.selectAll("path")[0];
+				p.forEach(function(d){
+					if (d.getAttribute("area") == area || areaFilter.indexOf(d.getAttribute("area")) != -1)
+						d.setAttribute("fill", selectedMap);
+					else if (d.getAttribute("area") != null)
+						d.setAttribute("fill",  unselectedMap);
+				})
+				
+				d3.selectAll("path")
+					.transition()
+					.style("fill",  function(d){
+						if (d.area=="undefined")
+						;
+						else
+							;//console.log("property " + d.area);
+					});
+					
+				d3.select("#perArea").selectAll("rect")
+					.transition()
+					.style("fill", function(d){
+						if (d != undefined && (d.key == area  || areaFilter.indexOf(d.key) != -1))
+							return selectedBar;						
+						else
+							return unselectedBar;
+					});
+					
+
+				// UPDATE AREA
+				// how many flats per area
+				if (clicked){
+					areas.forEach(function(d){d.value=0});
+					data.forEach(function(d){
+						if (valid(area, d)) {
+
+							var idx = areas.map(function(e){return e.key;}).indexOf(d.area);
+							if (idx == -1)
+								areas[areas.length] = {key: d.area, value:1};
+							else
+								areas[idx].value++;					
+						}
+					});				
+									
+					areas.sort(function(a,b){
+						return d3.ascending(a.value,b.value);
+					});
+					
+					var bars = svgPerArea.selectAll("rect")
+						.data(areas, function(d){return d.key});
+			   
+					bars.attr("x", function(d, i) {
+							return xPerAreaScale(i);
+						})
+						.attr("y", function(d) {
+							return hPerArea/3+yPerAreaScale(d.value);
+						})
+						.attr("width", xPerAreaScale.rangeBand())
+						.attr("height", function(d) {
+							return hPerArea*2/3-yPerAreaScale(d.value)-padPricing/2;
+						})
+						.attr("fill", unselectedBar);
+
+					var labels = svgPerArea.selectAll("text")
+						.data(areas, function(d){return d.key});
+						
+					labels.transition()
+						.text(function(d) {
+							return d.key;
+						})	
+						.attr("x", function(d, i) {
+							return xPerAreaScale(i) + xPerAreaScale.rangeBand() / 2-4;
+						})
+						.attr("y", function(d,i) {
+							return hPerArea/3+yPerAreaScale(d.value)-5;
+						})			   
+						.attr("transform",function(d,i){
+							var x = xPerAreaScale(i) + xPerAreaScale.rangeBand() / 2-4;
+							var y = hPerArea/3+yPerAreaScale(d.value)-5;//0;//14+i*10;
+							return "rotate(65 "+x+","+y+")";
+						})
+						.style("rotation", 2);
+				}	   
+			}
+
+			function unMarkArea(clicked){
+				markArea("", clicked);
+			}
+			
+			function clickArea(area){
+				if (areaFilter.indexOf(area) == -1){				
+					areaFilter[areaFilter.length] = area;
+				} else if (areaFilter.length == 1){
+					areaFilter=[];
+					document.getElementById("areaFilter").innerHTML = "";
+					unMarkArea(true);
+					resetPerArea();
+					return;
+				} else {
+					areaFilter.splice(areaFilter.indexOf(area), 1);
+				}
+				
+				//visual
+				markArea(area, true);
+				
+				//text buttons
+				document.getElementById("areaFilter").innerHTML = "";
+				
+				var tmp = document.createElement("div");
+				tmp.setAttribute("class", "button");
+				tmp.innerHTML="(clear)";
+				tmp.onclick = function(){
+					areaFilter = [];
+					document.getElementById("areaFilter").innerHTML = "";
+					unMarkArea(true);
+				};
+				document.getElementById("areaFilter").appendChild(tmp);
+							
+				areaFilter.forEach(function(d){
+					var tmp = document.createElement("div");
+					tmp.setAttribute("class", "button");
+					tmp.innerHTML=d;
+					tmp.onclick = function(){
+						clickArea(d);
+						unMarkArea(true);
+					};
+					document.getElementById("areaFilter").appendChild(tmp);
+				})
+				
+				/*if (areaFilter.length > 0){
+					var tmp = document.createElement("p");
+					tmp.innerText="(Ein Click entfernt die Filter)";
+					document.getElementById("areaFilter").appendChild(tmp);
+				}*/
+			}
+
+			function markFlat(d){	
+				var area = d.area;
+				document.getElementById("areaTxt").innerHTML="Flat: "+d.adresse+", in " + area;
+			
+				d3.selectAll("circle")
+					.transition()
+					.attr("r", function(e){
+						if (e == d)
+							return Math.sqrt(rScale(e.miete)*10);
+						else 
+							return rStd;//Math.sqrt(rScale(e.miete)*5);	
+					})
+					.style("fill", function(e){
+						if (d == e)
+							return selectedCircle;
+						else
+							return unselectedCircle;
+					});
+
+				var p = d3.selectAll("path")[0];
+				p.forEach(function(d){
+					if (d.getAttribute("area") == area || areaFilter.indexOf(d.getAttribute("area")) != -1)
+						d.setAttribute("fill", selectedMap);
+					else if (d.getAttribute("area") != null)
+						d.setAttribute("fill",  unselectedMap);
+				})
+				
+				d3.selectAll("path")
+					.transition()
+					.style("fill",  function(d){
+						if (d.area=="undefined")
+						;
+						else
+							;//console.log("property " + d.area);
+					});
+					
+				d3.select("#perArea").selectAll("rect")
+					.transition()
+					.style("fill", function(d){
+						if (d != undefined && (d.key == area  || areaFilter.indexOf(d.key) != -1))
+							return selectedBar;						
+						else
+							return unselectedBar;
+					});
+			}	
+
+			function resetPerArea(){
+				areas.forEach(function(d){d.value=0});
+				data.forEach(function(d){
+						var idx = areas.map(function(e){return e.key;}).indexOf(d.area);
+						if (idx == -1)
+							areas[areas.length] = {key: d.area, value:1};
+						else
+							areas[idx].value++;					
+				});				
+								
+				areas.sort(function(a,b){
+					return d3.ascending(a.value,b.value);
+				});
+				
+				var bars = svgPerArea.selectAll("rect")
+					.data(areas, function(d){return d.key});
+		   
+				bars.transition()
+					.attr("x", function(d, i) {
+						return xPerAreaScale(i);
+					})
+					.attr("y", function(d) {
+						return hPerArea/3+yPerAreaScale(d.value);
+					})
+					.attr("width", xPerAreaScale.rangeBand())
+					.attr("height", function(d) {
+						return hPerArea*2/3-yPerAreaScale(d.value)-padPricing/2;
+					})
+					.attr("fill", unselectedBar);
+					var labels = svgPerArea.selectAll("text")
+					.data(areas, function(d){return d.key});
+					
+				labels.transition()
+					.text(function(d) {
+						return d.key;
+					})	
+					.attr("x", function(d, i) {
+						return xPerAreaScale(i) + xPerAreaScale.rangeBand() / 2-4;
+					})
+					.attr("y", function(d,i) {
+						return hPerArea/3+yPerAreaScale(d.value)-5;
+					})			   
+					.attr("transform",function(d,i){
+						var x = xPerAreaScale(i) + xPerAreaScale.rangeBand() / 2-4;
+						var y = hPerArea/3+yPerAreaScale(d.value)-5;//0;//14+i*10;
+						return "rotate(65 "+x+","+y+")";
+					})
+					.style("rotation", 2);			
+			}
+			//////////////
+			// 
+			//	MAP
+			//
+			//////////////
+			
+			d3.json("data/berlin.json", function(json) {			
+				//Bind data and create one path per GeoJSON feature
+				svgMap.selectAll("path")
+					.data(json.features)
+					.enter()
+					.append("path")
+					.attr("area", function(d){
+						return d.properties.Name;
+					})
+					.attr("d", path)
+					.attr("stroke","#EEE8AA")
+					.attr("stroke-width", "2px")
+					.attr("fill", unselectedMap)
+					.on("mouseover", function(d){
+						markArea(d.properties.Name, false);
+					})
+					.on("mouseout", function(){
+						unMarkArea(false);
+					})
+					.on("click", function(d){
+						clickArea(d.properties.Name);
+					});
+				
+				svgMap.selectAll("circle")
+					.data(data)
+					.enter()
+					.append("circle")
+					.attr("cx", function(d){
+						return proj([d.lon, d.lat])[0];
+					})
+					.attr("cy", function(d){
+						return proj([d.lon, d.lat])[1];
+					})
+					.attr("r", function(d){
+						return rStd;//Math.sqrt(rScale(d.miete)*5);
+					})
+					.style("fill", unselectedCircle)
+					.style("fill-opacity", function(d){
+						if (d.besichtigt)
+							return 1;
+						else
+							return 1;//0.3
+					})
+									.on("mouseover", function(d){
+					markFlat(d);
+				})
+				.on("mouseout", function(){
+					unMarkArea(false);
+				});
+
+			});
+					
+			//////////////
+			// 
+			//	PRICING
+			//
+			//////////////
+			
+			var xPricingScale = d3.scale.linear()
+				.domain([minQm, maxQm])
+				.range([20+padPricing, wPricing-5]);
+				
+			var yPricingScale = d3.scale.linear()
+				.domain([maxMiete, minMiete])
+				.range([5, hPricing-padPricing]);
+				
+			svgPricing.selectAll("circle")
+				.data(data)
+				.enter()
+				.append("circle")
+				.attr("cx", function(d){
+					return xPricingScale(d.qm);
+				})
+				.attr("cy", function(d){
+					return yPricingScale(d.miete);
+				})
+				.attr("r", function(d){
+					return rStd;
+				})
+				.style("fill", unselectedCircle)
+				.on("mouseover", function(d){
+					markFlat(d);
+				})
+				.on("mouseout", function(){
+					unMarkArea(false);
+				});
+	
+			svgPricing.append("text")      // text label for the x axis
+				.attr("x", wPricing/2 )
+				.attr("y", hPricing)
+				.style("text-anchor", "middle")
+				.text("flatsize in m²");
+
+			svgPricing.append("text")      // text label for the x axis
+				.attr("transform", "rotate(-90)")
+				.attr("y", 0)
+				.attr("x",0-(hPricing/2))
+				.attr("dy", "1em")
+				.style("text-anchor", "middle")
+				.text("rent in EUR");				
+				
+			var xPricingAxis = d3.svg.axis()
+				.scale(xPricingScale)
+				.orient("bottom");
+
+			var yPricingAxis = d3.svg.axis()
+				.scale(yPricingScale)
+				.orient("left");
+
+			svgPricing.append("g")
+				.attr("class", "axis")
+				.attr("transform", "translate(0,"+(hPricing-padPricing+5)+")")
+				.call(xPricingAxis);
+
+			svgPricing.append("g")
+				.attr("class", "axis")
+				.attr("transform", "translate("+(xPricingScale(minQm)-5)+",0)")
+				.call(yPricingAxis);
+				
+			$(function() {
+				var select = $( "#test" );
+				$( "#rentSlider" ).slider({					
+					orientation: "vertical",								
+					range: true,					
+					min: 220,//minQm,
+					max: 400,//maxQm,
+					values: [minMiete, maxMiete],
+					slide: function( event, ui ) {
+						rentFilter[0] = ui.values[0]
+						rentFilter[1] = ui.values[1]
+						markArea("", true);
+					}
+					//src: stackoverflow.com/questions/12848181/d3-simple-linear-chart-with-jquery-ui-range-slider
+				});
+			});
+
+			$(function() {
+				$( "#qmSlider" ).slider({					
+					range: true,					
+					min: 15,//minQm,
+					max: 56,//maxQm,
+					values: [minQm, maxQm],
+					slide: function( event, ui ) {
+						var _m = ui.values[0]
+						var m = ui.values[1]
+						
+						qmFilter[0] = ui.values[0]
+						qmFilter[1] = ui.values[1]
+						markArea("", true);							
+					}
+					//src: stackoverflow.com/questions/12848181/d3-simple-linear-chart-with-jquery-ui-range-slider
+				});
+			});
+				
+			//////////////
+			// 
+			//	Amount by AREA
+			//
+			//////////////
+			
+			// how many flats per area
+			var areas = [];
+			data.forEach(function(d){
+				var idx = areas.map(function(e){return e.key;}).indexOf(d.area);
+				if (idx == -1)
+					areas[areas.length] = {key: d.area, value:1};
+				else
+					areas[idx].value++;
+			});
+			
+			var xPerAreaScale = d3.scale.ordinal()
+				.domain(d3.range(areas.length))
+				.rangeRoundBands([padPerArea/2, wPerArea-padPerArea],0.1);
+
+			areas.sort(function(a,b){
+				return d3.ascending(a.value,b.value);
+			});
+			
+			var yPerAreaScale = d3.scale.linear()
+					.domain([d3.max(areas, function(d){return d.value;}),0])
+					.range([10, hPerArea*2/3-padPerArea/2]);
+
+			//Create bars
+			svgPerArea.selectAll("rect")
+			   .data(areas, function(d){return d.key})
+			   .enter()
+			   .append("rect")
+			   .attr("x", function(d, i) {
+			   		return xPerAreaScale(i);
+			   })
+			   .attr("y", function(d) {
+			   		return hPerArea/3+yPerAreaScale(d.value);
+			   })
+			   .attr("width", xPerAreaScale.rangeBand())
+			   .attr("height", function(d) {
+			   		return hPerArea*2/3-yPerAreaScale(d.value)-padPerArea/2;
+			   })
+			   .attr("fill", unselectedBar)
+			   .on("mouseover", function(d){
+					markArea(d.key, false);
+			   })
+			   .on("mouseout", function() {
+					unMarkArea(false);
+					//Remove the tooltip
+					//d3.select("#tooltip").classed("hidden", true);
+			   })
+			   .on("click", function(d){
+					clickArea(d.key);
+			   });
+
+			//Create labels
+			svgPerArea.selectAll("text")
+			   .data(areas, function(d){return d.key})
+			   .enter()
+			   .append("text")
+			   .text(function(d) {
+			   		return d.key;
+			   })			 
+			   .attr("text-align", "right")
+			   .attr("vertical-align", "right")
+			   .attr("x", function(d, i) {
+			   		return xPerAreaScale(i) + xPerAreaScale.rangeBand() / 2-4;
+			   })
+			   .attr("y", function(d,i) {
+					return hPerArea/3+yPerAreaScale(d.value)-5;//0;//14+i*10;
+			   		//return hPricing - yPerAreaScale(d.value) + 14;
+			   })			   
+			   .attr("font-family", "sans-serif")
+			   .attr("font-size", "11px")
+			   .attr("transform",function(d,i){
+					var x = xPerAreaScale(i) + xPerAreaScale.rangeBand() / 2-4;
+					var y = hPerArea/3+yPerAreaScale(d.value)-5;//0;//14+i*10;
+					return "rotate(65 "+x+","+y+")";
+			   })
+			   .attr("fill", "black")
+			   .attr("fill-opacity", 1)
+			   .style("rotation", 2)
+			   .style("text-anchor", "end")
+			   .on("mouseover", function(d){
+					markArea(d.key, false);
+			   })
+			   .on("mouseout", function() {
+					unMarkArea(false);
+					//Remove the tooltip
+					//d3.select("#tooltip").classed("hidden", true);
+			   })
+			   .on("click", function(d){
+					clickArea(d.key);
+			   });
+
+
+			//create axis
+			var yPerAreaAxis = d3.svg.axis()				
+				.scale(yPerAreaScale)
+				.orient("right")
+				.ticks(5);
+			
+			svgPerArea.append("g")
+				.attr("class", "axis")
+				.attr("transform", "translate("+(wPerArea-padPerArea*4/5)+","+hPerArea/3+")")
+				.call(yPerAreaAxis);
+				
+			/////////////////
+			// 
+			//	BESICHTIGUNG 
+			//	PER DAY
+			//	- BAR-CHART
+			//	
+			/////////////////
+			var format = d3.time.format("%H %d/%m/%Y");
+			dateMin = d3.min(data, function(d){
+				return format.parse(d.zeit + " " + d.datum);
+				});
+			dateMax = d3.max(data, function(d){
+					return format.parse(d.zeit + " " + d.datum);
+				});
+
+			var perDay = [];
+			
+			for (var i = 1; i<(dateMax.getDate()-dateMin.getDate()+2); i++)
+				perDay[i] = 0;
+
+			data.forEach(function(d){
+				if (d.tag != "")
+					perDay[d.tag]++;
+			});			
+									
+			var xVisitsDayScale = d3.scale.ordinal()
+					.domain(d3.range(1, perDay.length))
+					.rangeRoundBands([padPerDay, wPerDay-padPerDay/2],0.1);
+					
+			var yVisitsDayScale = d3.scale.linear()
+					.domain([d3.max(perDay, function(d){
+						return d;
+					}),0])
+					.range([padPerDay/2,hPerDay-padPerDay-2]);
+					
+			svgPerDay.selectAll("rect")
+			   .data(perDay)
+			   .enter()
+			   .append("rect")
+			   .attr("x", function(d, i) {
+			   		return xVisitsDayScale(i);
+			   })
+			   .attr("y", function(d) {
+			   		return yVisitsDayScale(d);//yVisitsDayScale(d);
+			   })
+			   .attr("width", xVisitsDayScale.rangeBand())
+			   .attr("height", function(d) {
+			   		return hPerDay-yVisitsDayScale(d)-padPerDay;
+			   })
+			   .attr("fill", unselectedBar)
+			   .on("mouseover", function(_d,v){				
+					d3.selectAll("circle")
+						.transition()
+						.attr("r", function(d){
+							if (d.tag == v)
+								return Math.sqrt(rScale(d.miete)*10);
+							else 
+								return rStd;//Math.sqrt(rScale(d.miete)*5);	
+							})
+						.style("fill", function(d){
+							if (d.tag == v)
+								return selectedCircle;
+							else 
+								return unselectedCircle;
+						});
+			   })
+			   .on("mouseout", function(_v,v){
+					unMarkArea(false);
+			   });
+
+
+			var xVisitingAxis = d3.svg.axis()
+				.scale(xVisitsDayScale)
+				.orient("bottom")
+				.ticks(1);
+				
+
+			var yVisitingAxis = d3.svg.axis()				
+				.scale(yVisitsDayScale)
+				.orient("left")
+				.ticks(d3.max(perDay, function(d){
+						return d;
+					}));
+
+			/*svgPerDay.append("g")
+				.attr("class", "axis")
+				.attr("transform", "translate(0,"+(hPerDay-padPerDay)+")")
+				.call(xVisitingAxis);*/
+
+			svgPerDay.append("g")
+				.attr("class", "axis")
+				.attr("transform", "translate("+(padPerDay)+",0)")
+				.call(yVisitingAxis);
+				
+			/////////////////
+			// 
+			//	RUECKMELDUNG
+			//	- PIE-CHART
+			//	
+			/////////////////
+			
+			var outerRadius = hRueck / 2;
+			var innerRadius = 0;
+						
+			var arc = d3.svg.arc()
+							.innerRadius(innerRadius)
+							.outerRadius(outerRadius);
+			
+			var pie = d3.layout.pie();
+			
+			var rueckString = ["no answer", "negative answer", "positive answer"];
+			var rueck = [0,0,0];//not, rueckmeld, visit
+			for (var i = 0; i < data.length; i++)
+				if (data[i].besichtigt == 1)
+					rueck[2]++;
+				else if(data[i].rueckmeld == 1)
+					rueck[1]++;
+				else
+					rueck[0]++;			
+					
+			//rueck.forEach(function(d,i){rueck[i] = d3.round(100*d/data.length);})
+			//Set up groups
+			var arcs = svgRueck.selectAll("g.arc")
+						  .data(pie(rueck))
+						  .enter()
+						  .append("g")
+						  .attr("class", "arc")
+						  .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");
+
+			//Easy colors accessible via a 10-step ordinal scale
+			var color = [c1,c3,c2];
+			
+			//Draw arc paths
+			arcs.append("path")
+			    .attr("fill", function(d, i) {
+			    	return color[i];
+			    })
+			    .attr("d", arc);
+				
+			//Labels
+			arcs.append("text")
+			    .attr("transform", function(d) {
+			    	return "translate(" + arc.centroid(d) + ")";
+			    })
+				.attr("id", "label")
+			    .attr("text-anchor", "middle")
+			    .text(function(rueck) {
+			    	return(rueck.value);
+			    });		
+			
+			for (var i=0;i<rueck.length;i++){
+				svgRueck.append("rect")
+					.attr("x", outerRadius*2+10)
+					.attr("y", i*20+10)
+					.attr("width", 10)
+					.attr("height", 10)
+					.style("fill", color[i]);
+
+				svgRueck.append("text")
+					.attr("x", outerRadius*2+30)
+					.attr("y", i*20+20)
+					.text(rueckString[i]);			
+			}					
+
+			console.log("... done");
+		})
+		</script>
+		
+	</body>
+</html>

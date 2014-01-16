@@ -1,0 +1,166 @@
+body {
+font-family: 'Source Sans Pro';
+}
+
+h1 {
+	font-size: 46px;
+	font-weight: 200;
+	text-align: left;
+	-webkit-margin-before: 0em;
+	-webkit-margin-after: 0.1em;
+	margin-bottom: 15px; 
+	font-style: normal;	
+}
+
+h2 {
+	display: inline;
+	background: #FAFAD2;
+	text-align: left;
+	font-weight: 200;	
+	font-size: 16px;
+	line-height: 20px;
+	margin-bottom: 400px;
+	padding: 2px;	
+}
+
+p {
+	text-align: left;
+	margin-bottom: 20px;
+	font-size: 11px;
+	line-height: 14px;
+}
+
+text {
+	font-size: 11px;
+	line-height: 14px;
+	line-height: 18px;
+}
+
+#credits{
+	font-size: 8px;
+	float: right;
+	left: 200px;
+}
+#top{
+	border-width: 0px 0px 1px 0px;
+	border-style: dotted;
+}
+
+strong {
+	font-weight: normal;
+	background: #FAFAD2;
+}
+
+a {
+color: grey;
+text-decoration: none;
+
+-webkit-transition: all 0.1s ease-in;
+   -moz-transition: all 0.1s ease-in;
+     -o-transition: all 0.1s ease-in;
+	-ms-transition: all 0.1s ease-in;
+        transition: all 0.1s ease-in;
+}
+
+a:hover { 
+color:#FFF;
+background:#000;	
+}
+
+.axis path,
+.axis line {
+	border-radius: 0px;
+	padding: 0px;
+	fill: white;
+	stroke: black;
+	shape-rendering: crispEdges;
+}
+
+.axis text {
+	border-radius: 0px;
+	padding: 0px;
+	font-family: sans-serif;
+	font-size: 11px;
+}
+
+#qmSlider {
+	font-size: 11px;
+	padding: 0px;
+	border-radius:0px;
+	left: 55px;
+	width: 230px;
+	top: 204px;
+	height:1px;
+	float: top;
+}
+
+#rentSlider {
+	font-size: 11px;
+	padding: 0px;
+	border-radius:0px;	
+	width: 1px;
+	height: 190px;
+	left: 20px;
+	float:left;
+}
+
+#pricing {
+	left: 10px;
+	float: left;
+}
+
+.figure {
+	padding: 10px;	
+	background: #EEE8AA;	
+	_box-shadow:2px 2px 8px #DDD;	
+}
+
+.button {
+	border-radius: 3px;
+	padding: 2px;
+	margin: 2px;
+    	background-color: #FFFFFF;
+	float: left;
+}
+.button:hover{
+	background-color: #CCCCCC;
+}
+
+#areaTxt{
+	float:right;
+}
+
+#left { height: 100%;
+        background-color: #EEE8AA;
+		margin: 5px;
+        width: 300px;
+        float: left;
+		padding: 10px;
+}
+
+#middle {
+         background-color: #EEE8AA;
+		 margin: 5px;
+         width: 300px;
+         float: left;
+		 height: 100%;
+		 padding: 10px;
+}
+
+rect {
+	-moz-transition: all 0.3s;
+	-o-transition: all 0.3s;
+	-webkit-transition: all 0.3s;
+	transition: all 0.3s;
+}
+rect:hover {
+	fill:gold;
+}
+	
+#right {height: 100%;
+        background-color: #EEE8AA;
+		margin: 5px;
+        width: 500px;       
+		float: left;
+		padding: 10px;
+}
